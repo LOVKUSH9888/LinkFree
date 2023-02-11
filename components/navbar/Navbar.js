@@ -9,15 +9,24 @@ import Image from "next/legacy/image";
 import getIcon from "../Icon";
 const FaGithub = getIcon("FaGithub");
 
+// Navbar component
 export default function Navbar() {
+  // Get the session data from the next-auth hook
   const { data: session } = useSession();
+  // State to control the open/close state of the mobile menu
   const [isOpen, setIsOpen] = useState(false);
 
+  // Get the current router instance
   const router = useRouter();
+  // Helper function to get the full URL of the given path
   const getLink = (path) => `${router.basePath}${path}`;
+  // Reference to the container of the navigation bar
   const navConRef = useRef();
 
+  // Side effect that listens for click events outside of the navbar container
   useEffect(() => {
+    // Click event handler that closes the mobile menu if it's open and the
+    // click target is outside of the navbar container
     const detectClickOutsideHandler = (e) => {
       if (
         isOpen &&
@@ -28,13 +37,16 @@ export default function Navbar() {
       }
     };
 
+    // Add the click event listener if the mobile menu is open
     isOpen && document.addEventListener("click", detectClickOutsideHandler);
 
+    // Remove the click event listener on component unmount
     return () => {
       document.removeEventListener("click", detectClickOutsideHandler);
     };
   }, [isOpen]);
 
+  // List of primary navigation items
   const primary = [
     {
       name: "Search",
@@ -53,6 +65,8 @@ export default function Navbar() {
       url: "/docs",
     },
   ];
+
+  // Helper component that returns the login/logout and account controls
 
   const authControls = () => (
     <>
